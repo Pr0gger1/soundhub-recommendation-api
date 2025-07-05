@@ -1,8 +1,8 @@
 from typing import Optional
 
 from api.data.database import Database
-from repository import GenreRepository
-from services import RecommendationService
+from api.repository import GenreRepository
+from api.services import RecommendationService
 
 
 class DependencyInjector:

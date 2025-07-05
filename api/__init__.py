@@ -1,7 +1,1 @@
-import handlers
-import data
-import controllers
-import exceptions
-import repository
-import services
-import utils
+from . import handlers, data, controllers, exceptions, repository, services, utils

@@ -4,8 +4,8 @@ from uuid import UUID
 from fastapi import Depends, APIRouter
 
 from api.utils.di import DependencyInjector as di
-from services import RecommendationService
-from utils import logger
+from api.services import RecommendationService
+from api.utils import logger
 
 router = APIRouter()
 

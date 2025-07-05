@@ -2,7 +2,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import OperationalError
 
-from exceptions.UserNotFoundException import UserNotFoundException
+from api.exceptions.UserNotFoundException import UserNotFoundException
 
 __all__ = ['error_handlers']
 

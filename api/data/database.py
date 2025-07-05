@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.engine.base import Connection
 
-from utils import logger
+from api.utils import logger
 
 class Database:
     instance: Self | None = None

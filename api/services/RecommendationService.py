@@ -6,9 +6,10 @@ from pandas import DataFrame
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from exceptions.UserNotFoundException import UserNotFoundException
-from repository import GenreRepository
-from utils import logger
+from api.repository import GenreRepository
+from api.utils import logger
+
+from api.exceptions.UserNotFoundException import UserNotFoundException
 
 class RecommendationService:
 	instance: Self | None = None
