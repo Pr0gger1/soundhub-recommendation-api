@@ -4,9 +4,6 @@ from sqlalchemy.exc import OperationalError
 
 from api.exceptions.UserNotFoundException import UserNotFoundException
 
-from app import app
-
-@app.exception_handler(UserNotFoundException)
 async def user_not_found_exception_handler(request: Request, e: UserNotFoundException):
     return JSONResponse(
         status_code=404,
@@ -16,7 +13,6 @@ async def user_not_found_exception_handler(request: Request, e: UserNotFoundExce
         },
     )
 
-@app.exception_handler(KeyError)
 async def missing_env_variable_error(request: Request, e: KeyError):
     return JSONResponse(
         status_code=503,
@@ -26,7 +22,6 @@ async def missing_env_variable_error(request: Request, e: KeyError):
         }
     )
 
-@app.exception_handler(OperationalError)
 async def db_connection_error(request: Request, e: OperationalError):
     return JSONResponse(
         status_code=500,
@@ -35,3 +30,18 @@ async def db_connection_error(request: Request, e: OperationalError):
             "detail": repr(e)
         }
     )
+
+exception_handlers = [
+    {
+        'handler': user_not_found_exception_handler,
+        'exception': UserNotFoundException
+    },
+    {
+        'handler': missing_env_variable_error,
+        'exception': KeyError
+    },
+    {
+        'handler': db_connection_error,
+        'exception': OperationalError
+    }
+]
