@@ -12,3 +12,6 @@ API использует алгоритм ближайших соседей дл
 `make up` - Собрать и запустить приложение
 
 `make down` - Остановить приложение
+
+* [Основное API](https://github.com/Pr0gger1/soundhub-api)
+* [Мобильный фронтенд](https://github.com/Pr0gger1/soundhub-app)
