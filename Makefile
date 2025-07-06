@@ -14,8 +14,7 @@ help:  ## Show detailed help message
 	@echo ""
 	@echo "Available commands:"
 	@echo "  make build    - Build Docker image (tag: $(IMAGE_NAME))"
-	@echo "  make run      - Build and run container in detached mode (port: $(PORT))"
-	@echo "  make up       - Alias for 'run'"
+	@echo "  make up      - Build and run container in detached mode (port: $(PORT))"
 	@echo "  make start    - Start existing container"
 	@echo "  make stop     - Stop running container (without removal)"
 	@echo "  make rm       - Remove stopped container"
@@ -30,10 +29,12 @@ build:  ## Build the Docker image
 	docker build -t $(IMAGE_NAME) .
 	@echo "Image built successfully: $(IMAGE_NAME)"
 
-run: build start  ## Run container (with build dependency)
+up: build run  ## Run container (with build dependency)
 	@echo "Container started successfully. Access API at http://localhost:$(PORT)"
 
-up: run  ## Alias for run
+run:
+	@echo "Running Docker container..."
+	docker run -d --name $(CONTAINER_NAME) --network $(NETWORK) -p $(PORT):$(PORT) $(IMAGE_NAME)
 
 start:  ## Start existing container
 	@echo "Starting Docker container..."
@@ -41,26 +42,26 @@ start:  ## Start existing container
 
 stop:  ## Stop container (without removal)
 	@echo "Stopping container..."
-	@docker stop $(CONTAINER_NAME) 2>/dev/null || true
+	docker stop $(CONTAINER_NAME)
 	@echo "Container stopped (not removed)"
 
 rm:  ## Remove stopped container
 	@echo "Removing container..."
-	@docker rm $(CONTAINER_NAME) 2>/dev/null || true
+	docker rm $(CONTAINER_NAME)
 	@echo "Container removed"
 
 down: stop rm  ## Stop and remove container
 
 clean: down  ## Remove image and containers
 	@echo "Removing Docker image..."
-	@docker rmi $(IMAGE_NAME) 2>/dev/null || true
+	docker rmi $(IMAGE_NAME)
 	@echo "Cleanup complete - all containers and image removed"
 
 logs:  ## Show container logs
 	@echo "Showing logs for container $(CONTAINER_NAME):"
-	@docker logs -f $(CONTAINER_NAME)
+	docker logs -f $(CONTAINER_NAME)
 
-restart: down run  ## Rebuild and restart container
+restart: down up  ## Rebuild and restart container
 	@echo "Container restarted"
 
 ps:  ## Show project containers
