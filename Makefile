@@ -3,7 +3,7 @@
 # Variables
 IMAGE_NAME = soundhub-rec-api
 PORT = 8888
-NETWORK = docker_app_network
+NETWORK = soundhub_app_network
 CONTAINER_NAME = $(IMAGE_NAME)-container
 
 .PHONY: help build run up down stop rm clean logs restart
@@ -29,7 +29,7 @@ build:  ## Build the Docker image
 	docker build -t $(IMAGE_NAME) .
 	@echo "Image built successfully: $(IMAGE_NAME)"
 
-up: build run  ## Run container (with build dependency)
+up: build rm run  ## Run container (with build dependency)
 	@echo "Container started successfully. Access API at http://localhost:$(PORT)"
 
 run:
