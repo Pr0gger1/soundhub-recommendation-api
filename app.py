@@ -1,14 +1,17 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 
 from api.controllers import routes
 from api.exceptions import exception_handlers
+from context import lifespan
 
-app = FastAPI(version='1.1')
+app = FastAPI(version='1.1', lifespan = lifespan)
+router = APIRouter()
+
 
 def include_routers():
     for route in routes:
-        app.include_router(route)
+        router.include_router(route)
 
 def include_error_handlers():
     for handler in exception_handlers:

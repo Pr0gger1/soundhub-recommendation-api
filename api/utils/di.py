@@ -1,16 +1,21 @@
 from typing import Optional
 
 from api.data.database import Database
+from api.kafka.KafkaRecommendationService import KafkaRecommendationService
 from api.repository import GenreRepository
-from api.services import RecommendationService
+from api.service import RecommendationService
 
 
 class DependencyInjector:
     @staticmethod
     def get_recommend_service() -> Optional[RecommendationService]:
         return RecommendationService(
-            genre_repository=DependencyInjector.get_user_repository()
+            DependencyInjector.get_user_repository()
         )
+
+    @staticmethod
+    def get_kafka_service() -> Optional[KafkaRecommendationService]:
+        return KafkaRecommendationService(DependencyInjector.get_recommend_service())
 
     @staticmethod
     def get_db() -> Optional[Database]:

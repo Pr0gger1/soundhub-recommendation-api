@@ -1,13 +1,12 @@
 from typing import Optional
 from uuid import UUID
 
-from fastapi import Depends, APIRouter
+from fastapi import Depends
 
 from api.utils.di import DependencyInjector as di
-from api.services import RecommendationService
+from api.service import RecommendationService
 from api.utils import logger
-
-router = APIRouter()
+from app import router
 
 @router.get("/recommend/{user_id}")
 async def recommend_users(

@@ -1,4 +1,3 @@
-from typing import Self
 from uuid import UUID
 
 from dotenv import dotenv_values
@@ -12,17 +11,10 @@ from api.utils import logger
 from api.exceptions.UserNotFoundException import UserNotFoundException
 
 class RecommendationService:
-	instance: Self | None = None
-
 	def __init__(self, genre_repository: GenreRepository) -> None:
 		self.__config: dict[str, str | None] = dotenv_values()
 		self.__genre_repository = genre_repository
 		self.__neighbour_count = int(self.__config['NEIGHBOURS_DEFAULT'])
-
-	def __new__(cls, genre_repository: GenreRepository):
-		if cls.instance is None:
-			cls.instance = super().__new__(cls)
-		return cls.instance
 
 	def __find_nearest_neighbours(self, favorite_genres: DataFrame, user_id: UUID):
 		# Преобразуем preferredGenres в формат, пригодный для машинного обучения
