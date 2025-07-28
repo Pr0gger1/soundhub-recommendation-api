@@ -2,6 +2,7 @@ import json
 from uuid import UUID
 
 from dotenv import dotenv_values
+from fastapi import HTTPException
 from kafka import KafkaConsumer, KafkaProducer
 
 from api.kafka import KafkaClientFactory
@@ -37,7 +38,6 @@ class KafkaRecommendationService:
 
 		while True:
 			try:
-
 				records = self.__consumer.poll(timeout_ms=5000)
 
 				for partition, messages in records.items():
@@ -48,16 +48,24 @@ class KafkaRecommendationService:
 
 							self.__handle_message(message)
 
-						except Exception as e:
+						except HTTPException as e:
 							logger.error(f'consume[5]: {e}')
+
+							error_data = {
+								"error_type": "HTTPException",
+								"status_code": e.status_code,
+								"detail": e.detail
+							}
+
+							serialized_error_data = json.dumps(error_data)
 
 							self.__producer.send(
 								topic=error_topic,
 								key=message.key,
-								value=str(e),
+								value=serialized_error_data,
 								headers=[
-									('error', str(e).encode()),
-									('origin_topic', partition.topic.encode())
+									('origin_topic', partition.topic.encode()),
+									('kafka_correlationId', message.key)
 								]
 							)
 			except Exception as e:
@@ -71,7 +79,7 @@ class KafkaRecommendationService:
 		producer_topic = self.__env['KAFKA_RESPONSE_TOPIC']
 
 		if message.key is None:
-			raise Exception('invalid key')
+			raise HTTPException(detail='invalid key', status_code = 400)
 
 		message_id = message.key
 		user_uuid = self.__parse_uuid(message.value)
